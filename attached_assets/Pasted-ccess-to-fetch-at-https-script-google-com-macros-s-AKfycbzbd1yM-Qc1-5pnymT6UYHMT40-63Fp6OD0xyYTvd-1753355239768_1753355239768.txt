@@ -1,0 +1,48 @@
+ccess to fetch at 'https://script.google.com/macros/s/AKfycbzbd1yM_Qc1-5pnymT6UYHMT40-63Fp6OD0xyYTvdO6V5ssZo9WjDXF4STwkFWAROw9Bg/exec' from origin 'http://localhost:5000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+script.google.com/macros/s/AKfycbzbd1yM_Qc1-5pnymT6UYHMT40-63Fp6OD0xyYTvdO6V5ssZo9WjDXF4STwkFWAROw9Bg/exec:1  Failed to load resource: net::ERR_FAILEDUnderstand this error
+google-sheets.ts:41 Google Sheets API error: TypeError: Failed to fetch
+    at GoogleSheetsAPI.makeRequest (google-sheets.ts:18:30)
+    at GoogleSheetsAPI.getTrades (google-sheets.ts:48:17)
+    at queryFn (use-trades.ts:18:18)
+    at Object.fetchFn [as fn] (@tanstack_react-query.js?v=c276e180:840:14)
+    at run (@tanstack_react-query.js?v=c276e180:494:49)
+    at Object.start (@tanstack_react-query.js?v=c276e180:536:9)
+    at _a4.fetch (@tanstack_react-query.js?v=c276e180:926:41)
+    at _a9.executeFetch_fn (@tanstack_react-query.js?v=c276e180:2211:51)
+    at _a9.setOptions (@tanstack_react-query.js?v=c276e180:1955:72)
+    at @tanstack_react-query.js?v=c276e180:3032:14
+makeRequest @ google-sheets.ts:41Understand this error
+:5000/:1 Access to fetch at 'https://script.google.com/macros/s/AKfycbzbd1yM_Qc1-5pnymT6UYHMT40-63Fp6OD0xyYTvdO6V5ssZo9WjDXF4STwkFWAROw9Bg/exec' from origin 'http://localhost:5000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+script.google.com/macros/s/AKfycbzbd1yM_Qc1-5pnymT6UYHMT40-63Fp6OD0xyYTvdO6V5ssZo9WjDXF4STwkFWAROw9Bg/exec:1  Failed to load resource: net::ERR_FAILEDUnderstand this error
+google-sheets.ts:41 Google Sheets API error: TypeError: Failed to fetch
+    at GoogleSheetsAPI.makeRequest (google-sheets.ts:18:30)
+    at GoogleSheetsAPI.getStrategies (google-sheets.ts:69:17)
+    at queryFn (use-strategies.ts:18:18)
+    at Object.fetchFn [as fn] (@tanstack_react-query.js?v=c276e180:840:14)
+    at run (@tanstack_react-query.js?v=c276e180:494:49)
+    at Object.start (@tanstack_react-query.js?v=c276e180:536:9)
+    at _a4.fetch (@tanstack_react-query.js?v=c276e180:926:41)
+    at _a9.executeFetch_fn (@tanstack_react-query.js?v=c276e180:2211:51)
+    at _a9.setOptions (@tanstack_react-query.js?v=c276e180:1955:72)
+    at @tanstack_react-query.js?v=c276e180:3032:14
+makeRequest @ google-sheets.ts:41Understand this error
+settings:1 Access to fetch at 'https://script.google.com/macros/s/AKfycbwythtczwyU2JzVL77LDc2ctFKZxQvHwaY4SPV9lWfU8PLQOPx-hJwaZz5msZ85IqWkwQ/exec' from origin 'http://localhost:5000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+settings.tsx:68  POST https://script.google.com/macros/s/AKfycbwythtczwyU2JzVL77LDc2ctFKZxQvHwaY4SPV9lWfU8PLQOPx-hJwaZz5msZ85IqWkwQ/exec net::ERR_FAILED
+testConnection @ settings.tsx:68
+callCallback2 @ chunk-WERSD76P.js?v=1eb430f1:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=1eb430f1:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=1eb430f1:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-WERSD76P.js?v=1eb430f1:3736
+executeDispatch @ chunk-WERSD76P.js?v=1eb430f1:7014
+processDispatchQueueItemsInOrder @ chunk-WERSD76P.js?v=1eb430f1:7034
+processDispatchQueue @ chunk-WERSD76P.js?v=1eb430f1:7043
+dispatchEventsForPlugins @ chunk-WERSD76P.js?v=1eb430f1:7051
+(anonymous) @ chunk-WERSD76P.js?v=1eb430f1:7174
+batchedUpdates$1 @ chunk-WERSD76P.js?v=1eb430f1:18913
+batchedUpdates @ chunk-WERSD76P.js?v=1eb430f1:3579
+dispatchEventForPluginEventSystem @ chunk-WERSD76P.js?v=1eb430f1:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-WERSD76P.js?v=1eb430f1:5478
+dispatchEvent @ chunk-WERSD76P.js?v=1eb430f1:5472
+dispatchDiscreteEvent @ chunk-WERSD76P.js?v=1eb430f1:5449Understand this error
+settings:1 Access to fetch at 'https://script.google.com/macros/s/AKfycbwythtczwyU2JzVL77LDc2ctFKZxQvHwaY4SPV9lWfU8PLQOPx-hJwaZz5msZ85IqWkwQ/exec' from origin 'http://localhost:5000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+settings.tsx:68  POST https://script.google.com/macros/s/AKfycbwythtczwyU2JzVL77LDc2ctFKZxQvHwaY4SPV9lWfU8PLQOPx-hJwaZz5msZ85IqWkwQ/exec net::ERR_FAILED

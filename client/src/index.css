@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(240, 10%, 3.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(240, 10%, 3.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(240, 10%, 3.9%);
+  --primary: hsl(221, 83%, 53%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222, 84%, 4.9%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 16%, 46.9%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222, 84%, 4.9%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --ring: hsl(221, 83%, 53%);
+  --chart-1: hsl(12, 76%, 61%);
+  --chart-2: hsl(173, 58%, 39%);
+  --chart-3: hsl(197, 37%, 24%);
+  --chart-4: hsl(43, 74%, 66%);
+  --chart-5: hsl(27, 87%, 67%);
+  --profit: hsl(142, 76%, 36%);
+  --loss: hsl(0, 84%, 60%);
+  --warning: hsl(45, 93%, 47%);
+  --text-light: hsl(240, 10%, 3.9%);
+  --text-dark: hsl(0, 0%, 98%);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --primary: hsl(221, 83%, 53%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --chart-1: hsl(220, 70%, 50%);
+  --chart-2: hsl(160, 60%, 45%);
+  --chart-3: hsl(30, 80%, 55%);
+  --chart-4: hsl(280, 65%, 60%);
+  --chart-5: hsl(340, 75%, 55%);
+  --profit: hsl(142, 76%, 50%);
+  --loss: hsl(0, 84%, 60%);
+  --warning: hsl(45, 93%, 47%);
+  --text-light: hsl(0, 0%, 98%);
+  --text-dark: hsl(240, 10%, 3.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  .profit {
+    color: hsl(142, 76%, 36%) !important;
+  }
+  
+  .dark .profit {
+    color: hsl(142, 76%, 50%) !important;
+  }
+  
+  .loss {
+    color: hsl(0, 84%, 60%) !important;
+  }
+  
+  .dark .loss {
+    color: hsl(0, 84%, 65%) !important;
+  }
+  
+  .warning {
+    color: hsl(45, 93%, 47%) !important;
+  }
+  
+  .text-visible {
+    color: var(--foreground) !important;
+  }
+  
+  .dark .text-visible {
+    color: var(--foreground) !important;
+  }
+
+  /* Ensure all text is visible in dark mode */
+  .dark .text-gray-900 {
+    color: hsl(0, 0%, 95%) !important;
+  }
+  
+  .dark .text-gray-700 {
+    color: hsl(0, 0%, 90%) !important;
+  }
+  
+  .dark .text-gray-600 {
+    color: hsl(0, 0%, 80%) !important;
+  }
+  
+  .dark .text-gray-500 {
+    color: hsl(0, 0%, 70%) !important;
+  }
+  
+  .dark .text-gray-400 {
+    color: hsl(0, 0%, 60%) !important;
+  }
+
+  /* Fix muted text in dark mode */
+  .dark .text-muted-foreground {
+    color: hsl(0, 0%, 70%) !important;
+  }
+
+  /* Ensure form labels are visible */
+  .dark label {
+    color: hsl(0, 0%, 90%) !important;
+  }
+
+  /* Fix card titles and content */
+  .dark .text-card-foreground {
+    color: hsl(0, 0%, 95%) !important;
+  }
+
+  /* Fix table text visibility */
+  .dark td {
+    color: hsl(0, 0%, 90%) !important;
+  }
+
+  .dark th {
+    color: hsl(0, 0%, 85%) !important;
+  }
+
+  /* Calendar icon visibility fix for dark mode */
+  .dark .lucide-calendar {
+    color: white !important;
+    stroke: white !important;
+  }
+
+  .light .lucide-calendar {
+    color: black !important;
+    stroke: black !important;
+  }
+
+  /* Ensure calendar icons are visible in both modes */
+  .calendar-icon {
+    @apply text-gray-900 dark:text-gray-100;
+  }
+
+  .calendar-icon svg {
+    @apply stroke-current;
+  }
+}
+
+@layer components {
+  .stats-card {
+    @apply bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02];
+  }
+  
+  .stats-card:hover {
+    border-color: hsl(221, 83%, 53%, 0.2);
+  }
+  
+  .nav-link {
+    @apply px-3 py-2 text-sm font-medium transition-all duration-300 hover:text-primary relative overflow-hidden;
+  }
+  
+  .nav-link::before {
+    @apply absolute inset-0 -translate-x-full transition-transform duration-300 ease-out;
+    content: '';
+    background-color: hsl(221, 83%, 53%, 0.1);
+  }
+  
+  .nav-link:hover::before {
+    @apply translate-x-0;
+  }
+  
+  .nav-link-active {
+    @apply text-primary border-b-2 border-primary;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .scale-in {
+    animation: scaleIn 0.4s ease-out;
+  }
+  
+  .stagger-children > * {
+    animation: staggerFadeIn 0.6s ease-out backwards;
+  }
+  
+  .stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+  .stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+@keyframes staggerFadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* Enhanced card hover effects */
+.enhanced-card {
+  @apply transition-all duration-300 ease-out;
+  transform: translateY(0px);
+}
+
+.enhanced-card:hover {
+  @apply shadow-xl;
+  transform: translateY(-4px);
+}
+
+/* Smooth transitions for forms */
+.form-field {
+  @apply transition-all duration-200 ease-out;
+}
+
+.form-field:focus-within {
+  @apply ring-2 border-primary;
+  ring-color: hsl(221, 83%, 53%, 0.2);
+}
+
+/* Loading animations */
+.loading-pulse {
+  animation: loadingPulse 2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Responsive grid enhancements */
+.responsive-grid {
+  @apply grid gap-4 sm:gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Mobile responsiveness improvements */
+@media (max-width: 640px) {
+  .stats-card {
+    @apply p-4;
+  }
+  
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+}
