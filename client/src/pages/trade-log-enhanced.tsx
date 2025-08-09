@@ -73,7 +73,7 @@ export default function TradeLogEnhanced() {
       exitPrice: 0,
       stopLoss: 0,
       targetPrice: 0,
-      isTradeTaken: false,
+      isTradeTaken: true,
       whichSetup: "",
       emotion: "",
       notes: "",

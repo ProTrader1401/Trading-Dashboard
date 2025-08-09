@@ -17,6 +17,7 @@ const quickTradeSchema = z.object({
   quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
   entryPrice: z.coerce.number().min(0.01, "Entry price must be greater than 0"),
   exitPrice: z.coerce.number().min(0.01, "Exit price must be greater than 0"),
+  isTradeTaken: z.boolean().default(true),
 });
 
 type QuickTradeForm = z.infer<typeof quickTradeSchema>;
@@ -31,6 +32,7 @@ export default function QuickTradeForm() {
       quantity: 0,
       entryPrice: 0,
       exitPrice: 0,
+      isTradeTaken: true,
     },
   });
 
@@ -44,7 +46,7 @@ export default function QuickTradeForm() {
       entryPrice: data.entryPrice.toString(),
       exitPrice: data.exitPrice.toString(),
       profitLoss: profitLoss.toString(),
-      setupFollowed: false,
+      isTradeTaken: data.isTradeTaken,
       whichSetup: null,
       emotion: null,
       notes: null,

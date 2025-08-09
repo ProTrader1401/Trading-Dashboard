@@ -53,8 +53,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
           result = await googleSheetsClient.testConnection(targetSheetId);
           break;
         case 'getTrades':
-          // Return local trades for simplicity - Google Sheets integration working for sync
-          result = { data: await storage.getTrades() };
+          // Fetch directly from Google Sheets for real-time data
+          try {
+            const response = await fetch(settings.googleScriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                action: 'getTrades',
+                sheetId: targetSheetId
+              }),
+            });
+            
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const googleResult = await response.json();
+            console.log('Google Sheets getTrades response:', googleResult);
+            
+            if (googleResult.success) {
+              result = { data: googleResult.data || [] };
+            } else {
+              throw new Error(googleResult.error || 'Failed to fetch from Google Sheets');
+            }
+          } catch (error) {
+            console.warn('Failed to fetch from Google Sheets, using local data:', error);
+            result = { data: await storage.getTrades() };
+          }
           break;
         case 'addTrade':
           // Validate and calculate P&L before storing
@@ -76,12 +101,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Sync to Google Sheets with duplicate prevention
           try {
-            const response = await (googleSheetsClient as any).makeRequest({
+            const response = await fetch(settings.googleScriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
               action: 'addTrade',
               data: trade,
               sheetId: targetSheetId
             });
-            console.log('Trade synced to Google Sheets:', response.success);
+              }),
+            });
+            
+            if (response.ok) {
+              const syncResult = await response.json();
+              console.log('Trade synced to Google Sheets:', syncResult.success);
+            }
           } catch (syncError) {
             console.warn('Trade sync to Google Sheets failed:', syncError);
           }
@@ -89,19 +123,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
           result = { data: trade };
           break;
         case 'getStrategies':
-          result = { data: await storage.getStrategies() };
+          // Fetch directly from Google Sheets for real-time data
+          try {
+            const response = await fetch(settings.googleScriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                action: 'getStrategies',
+                sheetId: targetSheetId
+              }),
+            });
+            
+            if (response.ok) {
+              const googleResult = await response.json();
+              result = { data: googleResult.data || [] };
+            } else {
+              throw new Error('Failed to fetch strategies from Google Sheets');
+            }
+          } catch (error) {
+            console.warn('Failed to fetch strategies from Google Sheets, using local data:', error);
+            result = { data: await storage.getStrategies() };
+          }
           break;
         case 'addStrategy':
           const strategy = await storage.createStrategy(data);
           try {
-            await googleSheetsClient.syncData({ strategies: [strategy] });
+            const response = await fetch(settings.googleScriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'addStrategy',
+                data: strategy,
+                sheetId: targetSheetId
+              }),
+            });
           } catch (syncError) {
             console.warn('Strategy sync to Google Sheets failed:', syncError);
           }
           result = { data: strategy };
           break;
         case 'getPsychologyEntries':
-          result = { data: await storage.getPsychologyEntries() };
+          // Fetch directly from Google Sheets for real-time data
+          try {
+            const response = await fetch(settings.googleScriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                action: 'getPsychologyEntries',
+                sheetId: targetSheetId
+              }),
+            });
+            
+            if (response.ok) {
+              const googleResult = await response.json();
+              result = { data: googleResult.data || [] };
+            } else {
+              throw new Error('Failed to fetch psychology entries from Google Sheets');
+            }
+          } catch (error) {
+            console.warn('Failed to fetch psychology entries from Google Sheets, using local data:', error);
+            result = { data: await storage.getPsychologyEntries() };
+          }
           break;
         case 'addPsychologyEntry':
           // Add unique ID and timestamp
@@ -111,11 +193,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // Sync to Google Sheets with duplicate prevention
           try {
-            const response = await (googleSheetsClient as any).makeRequest({
+            const response = await fetch(settings.googleScriptUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
               action: 'addPsychologyEntry', 
-              data: psychologyEntry
+                data: psychologyEntry,
+                sheetId: targetSheetId
+              }),
             });
-            console.log('Psychology entry synced to Google Sheets:', response.success);
+            
+            if (response.ok) {
+              const syncResult = await response.json();
+              console.log('Psychology entry synced to Google Sheets:', syncResult.success);
+            }
           } catch (syncError) {
             console.warn('Psychology entry sync to Google Sheets failed:', syncError);
           }

@@ -18,7 +18,9 @@ export function useStrategies() {
       return api.getStrategies();
     },
     enabled: !!api,
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    staleTime: 0, // Always fetch fresh data
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const addStrategyMutation = useMutation({
@@ -28,6 +30,7 @@ export function useStrategies() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["strategies"] });
+      queryClient.refetchQueries({ queryKey: ["strategies"] }, { immediate: true });
       toast({
         title: "Success",
         description: "Strategy added successfully",

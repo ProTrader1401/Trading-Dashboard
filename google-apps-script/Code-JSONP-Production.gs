@@ -18,7 +18,7 @@ const CONFIG = {
 // CORRECT Headers that match UI exactly
 const TRADES_HEADERS = [
   'ID', 'Trade Date', 'Stock Name', 'Quantity', 'Entry Price', 'Exit Price', 
-  'Stop Loss', 'Target Price', 'P&L', 'Is Trade Taken', 'Strategy', 'Emotion', 
+  'Stop Loss', 'Target Price', 'P&L', 'Trade Taken', 'Strategy', 'Emotion', 
   'Trade Notes', 'Psychology Reflections', 'Screenshot Link', 'Created At'
 ];
 
@@ -293,7 +293,8 @@ function handleGetTrades(sheetId) {
       stopLoss: row[6] || '',
       targetPrice: row[7] || '',
       profitLoss: row[8] || '0',
-      isTradeTaken: row[9] === 'Yes' || row[9] === true,
+      isTradeTaken: row[9] === 'Yes' || row[9] === true || row[9] === 'TRUE',
+      setupFollowed: row[9] === 'Yes' || row[9] === true || row[9] === 'TRUE',
       whichSetup: row[10] || null,
       emotion: row[11] || '',
       notes: row[12] || null,
@@ -401,7 +402,7 @@ function handleAddTrade(sheetId, requestData) {
       trade.stopLoss || '',
       trade.targetPrice || '',
       trade.profitLoss || '0',
-      trade.isTradeTaken ? 'Yes' : 'No',
+      (trade.isTradeTaken === true || trade.isTradeTaken === 'true' || trade.setupFollowed === true) ? 'Yes' : 'No',
       trade.whichSetup || '',
       trade.emotion || '',
       trade.notes || '',

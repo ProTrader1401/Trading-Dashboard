@@ -94,14 +94,48 @@ export class GoogleSheetsAPI {
 
   // Trades
   async getTrades(): Promise<Trade[]> {
-    const result = await this.makeRequest("getTrades");
-    // Ensure proper data structure for frontend
-    return result.data || result;
+    try {
+      const result = await this.makeRequest("getTrades");
+      console.log('Raw Google Sheets response for getTrades:', result);
+      
+      // Handle different response formats
+      let trades = result.data || result;
+      
+      // Ensure it's an array
+      if (!Array.isArray(trades)) {
+        console.warn('Expected array but got:', typeof trades, trades);
+        return [];
+      }
+      
+      // Transform data to ensure proper field mapping
+      return trades.map(trade => ({
+        ...trade,
+        // Ensure boolean fields are properly converted
+        isTradeTaken: trade.isTradeTaken === true || trade.isTradeTaken === 'Yes' || trade.setupFollowed === true,
+        setupFollowed: trade.setupFollowed === true || trade.isTradeTaken === true || trade.isTradeTaken === 'Yes',
+        // Ensure numeric fields are properly converted
+        quantity: typeof trade.quantity === 'string' ? parseInt(trade.quantity) : trade.quantity,
+        // Ensure string fields are not null
+        entryPrice: trade.entryPrice?.toString() || '0',
+        exitPrice: trade.exitPrice?.toString() || null,
+        profitLoss: trade.profitLoss?.toString() || '0',
+      }));
+    } catch (error) {
+      console.error('Error fetching trades from Google Sheets:', error);
+      throw error;
+    }
   }
 
   async addTrade(trade: Omit<Trade, "id" | "createdAt">): Promise<Trade> {
-    const result = await this.makeRequest("addTrade", trade);
-    return result.data || result;
+    try {
+      console.log('Adding trade to Google Sheets:', trade);
+      const result = await this.makeRequest("addTrade", trade);
+      console.log('Add trade response:', result);
+      return result.data || result;
+    } catch (error) {
+      console.error('Error adding trade to Google Sheets:', error);
+      throw error;
+    }
   }
 
   async updateTrade(id: number, trade: Partial<Trade>): Promise<Trade> {

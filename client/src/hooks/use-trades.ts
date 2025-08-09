@@ -15,10 +15,14 @@ export function useTrades() {
     queryKey: ["trades"],
     queryFn: async () => {
       if (!api) throw new Error("Google Sheets not configured");
-      return api.getTrades();
+      // Always fetch from Google Sheets for real-time data
+      const result = await api.getTrades();
+      return result;
     },
     enabled: !!api,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 0, // Always fetch fresh data
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const addTradeMutation = useMutation({
@@ -28,6 +32,7 @@ export function useTrades() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trades"] });
+      queryClient.refetchQueries({ queryKey: ["trades"] }, { immediate: true });
       toast({
         title: "Success",
         description: "Trade added successfully",
@@ -49,6 +54,7 @@ export function useTrades() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trades"] });
+      queryClient.refetchQueries({ queryKey: ["trades"] }, { immediate: true });
       toast({
         title: "Success",
         description: "Trade updated successfully",
@@ -70,6 +76,7 @@ export function useTrades() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["trades"] });
+      queryClient.refetchQueries({ queryKey: ["trades"] }, { immediate: true });
       toast({
         title: "Success",
         description: "Trade deleted successfully",
@@ -109,6 +116,6 @@ export function useTradesByDate(date: string) {
       return api.getTradesByDate(date);
     },
     enabled: !!api && !!date,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 0, // Always fetch fresh data
   });
 }
