@@ -15,14 +15,16 @@ export function useTrades() {
     queryKey: ["trades"],
     queryFn: async () => {
       if (!api) throw new Error("Google Sheets not configured");
-      // Always fetch from Google Sheets for real-time data
       const result = await api.getTrades();
+      console.log('Fetched trades from Google Sheets:', result);
       return result;
     },
     enabled: !!api,
-    staleTime: 0, // Always fetch fresh data
+    staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
+    retry: 1,
+    retryDelay: 1000,
   });
 
   const addTradeMutation = useMutation({

@@ -28,7 +28,7 @@ export interface ConnectionTestResponse {
 }
 
 export class GoogleSheetsClient {
-  private scriptUrl: string | null = null;
+  public scriptUrl: string | null = null;
   private retryAttempts = 0; // No retries for ultra-fast response
   private retryDelay = 100; // Ultra-fast 100ms delay
 
@@ -53,10 +53,7 @@ export class GoogleSheetsClient {
     }
 
     try {
-      const response = await this.makeRequest({
-        action: 'test',
-        sheetId: sheetId
-      });
+      const response = await this.makeRequest('test', { sheetId });
 
       return response;
     } catch (error) {
@@ -183,7 +180,7 @@ export class GoogleSheetsClient {
   /**
    * Make HTTP request to Google Apps Script
    */
-  private async makeRequest(data: any, sheetId?: string): Promise<any> {
+  public async makeRequest(action: string, data: any, sheetId?: string): Promise<any> {
     if (!this.scriptUrl) {
       throw new Error('Script URL not configured');
     }
@@ -192,19 +189,26 @@ export class GoogleSheetsClient {
     const timeoutId = setTimeout(() => controller.abort(), 5000); // Ultra-fast 5 second timeout
 
     try {
+      const requestBody = {
+        action,
+        data: { ...data, sheetId: sheetId || data?.sheetId },
+        sheetId: sheetId || data?.sheetId,
+      };
+
       const response = await fetch(this.scriptUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...data, sheetId }),
+        body: JSON.stringify(requestBody),
         signal: controller.signal
       });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const result = await response.json();

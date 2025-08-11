@@ -11,8 +11,6 @@ export class GoogleSheetsAPI {
 
   private async makeRequest(action: string, data?: any) {
     try {
-      // In production (static build), use JSONP to avoid CORS issues
-      // In development, route through backend to avoid CORS issues
       const isProduction = import.meta.env.PROD;
       
       if (isProduction) {
@@ -76,7 +74,8 @@ export class GoogleSheetsAPI {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorText = await response.text();
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
 
         const result = await response.json();
@@ -98,27 +97,28 @@ export class GoogleSheetsAPI {
       const result = await this.makeRequest("getTrades");
       console.log('Raw Google Sheets response for getTrades:', result);
       
-      // Handle different response formats
       let trades = result.data || result;
       
-      // Ensure it's an array
       if (!Array.isArray(trades)) {
         console.warn('Expected array but got:', typeof trades, trades);
         return [];
       }
       
-      // Transform data to ensure proper field mapping
       return trades.map(trade => ({
         ...trade,
-        // Ensure boolean fields are properly converted
         isTradeTaken: trade.isTradeTaken === true || trade.isTradeTaken === 'Yes' || trade.setupFollowed === true,
-        setupFollowed: trade.setupFollowed === true || trade.isTradeTaken === true || trade.isTradeTaken === 'Yes',
-        // Ensure numeric fields are properly converted
+        setupFollowed: trade.isTradeTaken === true || trade.isTradeTaken === 'Yes' || trade.setupFollowed === true,
         quantity: typeof trade.quantity === 'string' ? parseInt(trade.quantity) : trade.quantity,
-        // Ensure string fields are not null
         entryPrice: trade.entryPrice?.toString() || '0',
         exitPrice: trade.exitPrice?.toString() || null,
         profitLoss: trade.profitLoss?.toString() || '0',
+        stopLoss: trade.stopLoss?.toString() || null,
+        targetPrice: trade.targetPrice?.toString() || null,
+        whichSetup: trade.whichSetup || null,
+        emotion: trade.emotion || null,
+        notes: trade.notes || null,
+        psychologyReflections: trade.psychologyReflections || null,
+        screenshotLink: trade.screenshotLink || null,
       }));
     } catch (error) {
       console.error('Error fetching trades from Google Sheets:', error);
@@ -156,7 +156,18 @@ export class GoogleSheetsAPI {
   // Strategies
   async getStrategies(): Promise<Strategy[]> {
     const result = await this.makeRequest("getStrategies");
-    return result.data || result;
+    let strategies = result.data || result;
+    if (!Array.isArray(strategies)) {
+      console.warn('Expected array but got:', typeof strategies, strategies);
+      return [];
+    }
+    return strategies.map(strategy => ({
+      ...strategy,
+      tags: typeof strategy.tags === 'string' ? strategy.tags.split(',').map((tag: string) => tag.trim()) : strategy.tags,
+      status: strategy.status || 'active',
+      description: strategy.description || null,
+      screenshotUrl: strategy.screenshotUrl || null,
+    }));
   }
 
   async addStrategy(strategy: Omit<Strategy, "id" | "createdAt">): Promise<Strategy> {
@@ -177,7 +188,19 @@ export class GoogleSheetsAPI {
   // Psychology Entries
   async getPsychologyEntries(): Promise<PsychologyEntry[]> {
     const result = await this.makeRequest("getPsychologyEntries");
-    return result.data || result;
+    let entries = result.data || result;
+    if (!Array.isArray(entries)) {
+      console.warn('Expected array but got:', typeof entries, entries);
+      return [];
+    }
+    return entries.map(entry => ({
+      ...entry,
+      dailyPnL: entry.dailyPnL?.toString() || null,
+      bestTradeId: entry.bestTradeId ? parseInt(entry.bestTradeId) : null,
+      worstTradeId: entry.worstTradeId ? parseInt(entry.worstTradeId) : null,
+      mentalReflections: entry.mentalReflections || null,
+      improvementAreas: entry.improvementAreas || null,
+    }));
   }
 
   async addPsychologyEntry(entry: Omit<PsychologyEntry, "id" | "createdAt">): Promise<PsychologyEntry> {

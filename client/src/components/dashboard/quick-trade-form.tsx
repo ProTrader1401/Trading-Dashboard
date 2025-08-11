@@ -32,7 +32,7 @@ export default function QuickTradeForm() {
       quantity: 0,
       entryPrice: 0,
       exitPrice: 0,
-      isTradeTaken: true,
+      isTradeTaken: true, // Default to true since most logged trades are taken
     },
   });
 

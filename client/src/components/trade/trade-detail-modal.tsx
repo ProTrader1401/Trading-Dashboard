@@ -71,7 +71,7 @@ export default function TradeDetailModal({ trade, isOpen, onClose }: TradeDetail
       exitPrice: trade?.exitPrice ? parseFloat(trade.exitPrice.toString()) : undefined,
       stopLoss: trade?.stopLoss ? parseFloat(trade.stopLoss.toString()) : undefined,
       targetPrice: trade?.targetPrice ? parseFloat(trade.targetPrice.toString()) : undefined,
-      isTradeTaken: trade?.isTradeTaken || trade?.setupFollowed || false,
+      isTradeTaken: trade?.isTradeTaken || trade?.setupFollowed || true, // Default to true
       whichSetup: trade?.whichSetup || "",
       emotion: trade?.emotion || "",
       notes: trade?.notes || "",

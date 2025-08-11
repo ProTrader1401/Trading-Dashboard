@@ -6,6 +6,20 @@
  * Last Updated: 2025-01-28
  */
 
+// Helper to set CORS headers for all responses
+function setCorsHeaders(response) {
+  return response
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
+// Handle OPTIONS requests (CORS preflight)
+function doOptions() {
+  const response = ContentService.createTextOutput('');
+  return setCorsHeaders(response);
+}
+
 // NO HARDCODED SHEET ID - ACCEPTS FROM REQUEST
 const CONFIG = {
   SHEETS: {
@@ -146,29 +160,37 @@ function doGet(e) {
     // Handle JSONP callback
     if (callback) {
       const jsonpResponse = callback + '(' + JSON.stringify(result) + ');';
-      return ContentService
-        .createTextOutput(jsonpResponse)
-        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+      return setCorsHeaders(
+        ContentService
+          .createTextOutput(jsonpResponse)
+          .setMimeType(ContentService.MimeType.JAVASCRIPT)
+      );
     }
     
     // Regular JSON response
-    return ContentService
-      .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON);
+    return setCorsHeaders(
+      ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON)
+    );
       
   } catch (error) {
     const errorResult = { success: false, error: error.message, timestamp: getISTDateTime() };
     
     if (e.parameter.callback) {
       const jsonpError = e.parameter.callback + '(' + JSON.stringify(errorResult) + ');';
-      return ContentService
-        .createTextOutput(jsonpError)
-        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+      return setCorsHeaders(
+        ContentService
+          .createTextOutput(jsonpError)
+          .setMimeType(ContentService.MimeType.JAVASCRIPT)
+      );
     }
     
-    return ContentService
-      .createTextOutput(JSON.stringify(errorResult))
-      .setMimeType(ContentService.MimeType.JSON);
+    return setCorsHeaders(
+      ContentService
+        .createTextOutput(JSON.stringify(errorResult))
+        .setMimeType(ContentService.MimeType.JSON)
+    );
   }
 }
 
@@ -234,18 +256,22 @@ function doPost(e) {
         result = { success: false, error: 'Unknown action: ' + action };
     }
     
-    return ContentService
-      .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON);
+    return setCorsHeaders(
+      ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON)
+    );
       
   } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({
+    return setCorsHeaders(
+      ContentService
+        .createTextOutput(JSON.stringify({
         success: false,
         error: error.message,
         timestamp: getISTDateTime()
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+        }))
+        .setMimeType(ContentService.MimeType.JSON)
+    );
   }
 }
 
@@ -293,8 +319,8 @@ function handleGetTrades(sheetId) {
       stopLoss: row[6] || '',
       targetPrice: row[7] || '',
       profitLoss: row[8] || '0',
-      isTradeTaken: row[9] === 'Yes' || row[9] === true || row[9] === 'TRUE',
-      setupFollowed: row[9] === 'Yes' || row[9] === true || row[9] === 'TRUE',
+      isTradeTaken: row[9] === 'Yes' || row[9] === true || row[9] === 'TRUE' || row[9] === 1,
+      setupFollowed: row[9] === 'Yes' || row[9] === true || row[9] === 'TRUE' || row[9] === 1,
       whichSetup: row[10] || null,
       emotion: row[11] || '',
       notes: row[12] || null,
@@ -402,7 +428,7 @@ function handleAddTrade(sheetId, requestData) {
       trade.stopLoss || '',
       trade.targetPrice || '',
       trade.profitLoss || '0',
-      (trade.isTradeTaken === true || trade.isTradeTaken === 'true' || trade.setupFollowed === true) ? 'Yes' : 'No',
+      (trade.isTradeTaken === true || trade.isTradeTaken === 'true' || trade.isTradeTaken === 1 || trade.setupFollowed === true) ? 'Yes' : 'No',
       trade.whichSetup || '',
       trade.emotion || '',
       trade.notes || '',

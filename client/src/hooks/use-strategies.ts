@@ -15,12 +15,16 @@ export function useStrategies() {
     queryKey: ["strategies"],
     queryFn: async () => {
       if (!api) throw new Error("Google Sheets not configured");
-      return api.getStrategies();
+      const result = await api.getStrategies();
+      console.log('Fetched strategies from Google Sheets:', result);
+      return result;
     },
     enabled: !!api,
-    staleTime: 0, // Always fetch fresh data
+    staleTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
+    retry: 1,
+    retryDelay: 1000,
   });
 
   const addStrategyMutation = useMutation({

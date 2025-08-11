@@ -36,12 +36,16 @@ export function usePsychologyEntries() {
       }
 
       const googleSheetsAPI = new GoogleSheetsAPI(settings.googleScriptUrl, settings.googleSheetId);
-      return googleSheetsAPI.getPsychologyEntries();
+      const result = await googleSheetsAPI.getPsychologyEntries();
+      console.log('Fetched psychology entries from Google Sheets:', result);
+      return result;
     },
     enabled: !!(settings?.googleScriptUrl && settings?.googleSheetId),
     staleTime: 0,
     refetchOnMount: true,
-    refetchOnWindowFocus: true
+    refetchOnWindowFocus: true,
+    retry: 1,
+    retryDelay: 1000,
   });
 }
 
