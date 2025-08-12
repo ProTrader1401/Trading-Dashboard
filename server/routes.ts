@@ -3,6 +3,7 @@ import { googleSheetsClient } from "./googleSheetsClient";
 import { log } from "./vite";
 import { storage } from "./storage";
 export async function registerRoutes(app: Express) {
+}
 export async function registerRoutes(app: Express) {
   app.get("/api/settings", async (req: Request, res: Response) => {
     try {
