@@ -1,17 +1,45 @@
 import { Express, Request, Response } from "express";
 import { googleSheetsClient } from "./googleSheetsClient";
 import { log } from "./vite";
-import { createServer } from "http";
+import { storage } from "./storage";
 
 export async function registerRoutes(app: Express) {
+  // Route to get settings
+  app.get("/api/settings", async (req: Request, res: Response) => {
+    try {
+      const settings = await storage.getSettings();
+      res.json({ success: true, data: settings });
+    } catch (error: any) {
+      log(`Error getting settings: ${error.message}`, "error");
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  // Route to save settings
+  app.post("/api/settings", async (req: Request, res: Response) => {
+    try {
+      const settings = req.body;
+      await storage.saveSettings(settings);
+      
+      // Update the Google Sheets client with new settings
+      if (settings.googleScriptUrl) {
+        googleSheetsClient.setScriptUrl(settings.googleScriptUrl);
+      }
+      
+      res.json({ success: true, data: settings });
+    } catch (error: any) {
+      log(`Error saving settings: ${error.message}`, "error");
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
   // Route to handle all Google Sheets API calls via proxy
   app.post("/api/google-sheets", async (req: Request, res: Response) => {
     try {
       const { action, data, sheetId } = req.body;
       
       // Load settings from storage to get script URL
-      const storage = await import("./storage");
-      const settings = await storage.storage.getSettings();
+      const settings = await storage.getSettings();
       
       if (!settings?.googleScriptUrl) {
         return res.status(400).json({ 
@@ -63,7 +91,4 @@ export async function registerRoutes(app: Express) {
     });
   });
 
-  // Create and return server
-  const server = createServer(app);
-  return server;
 }

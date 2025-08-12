@@ -22,12 +22,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // Default settings
       setSettings({
         id: 1,
-        googleSheetId: import.meta.env.VITE_GOOGLE_SHEET_ID || "",
-        googleScriptUrl: import.meta.env.VITE_GOOGLE_SCRIPT_URL || "",
-        updatedAt: new Date(),
-      });
-    }
-    setIsLoading(false);
+    // Load settings from backend
+    const loadSettings = async () => {
+      try {
+        const response = await fetch("/api/settings");
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.data) {
+            setSettings(result.data);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to load settings from backend:", error);
+        // Fallback to localStorage
+        const savedSettings = localStorage.getItem('tradingDashboardSettings');
+        if (savedSettings) {
+          setSettings(JSON.parse(savedSettings));
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadSettings();
   }, []);
 
   const updateSettings = (newSettings: Partial<Settings>) => {

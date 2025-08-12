@@ -45,7 +45,9 @@ export default function Settings() {
   }, [settings, form]);
 
   const onSubmit = (data: SettingsForm) => {
-    saveSettings(data);
+    saveSettings(data).catch(error => {
+      console.error("Failed to save settings:", error);
+    });
     setConnectionStatus("idle");
   };
 
