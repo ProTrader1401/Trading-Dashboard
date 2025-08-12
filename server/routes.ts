@@ -2,9 +2,8 @@ import { Express, Request, Response } from "express";
 import { googleSheetsClient } from "./googleSheetsClient";
 import { log } from "./vite";
 import { storage } from "./storage";
-
 export async function registerRoutes(app: Express) {
-  // Route to get settings
+export async function registerRoutes(app: Express) {
   app.get("/api/settings", async (req: Request, res: Response) => {
     try {
       const settings = await storage.getSettings();
@@ -90,5 +89,4 @@ export async function registerRoutes(app: Express) {
       memory: process.memoryUsage(),
     });
   });
-
 }
