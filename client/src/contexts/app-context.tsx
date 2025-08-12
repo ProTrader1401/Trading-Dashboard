@@ -22,6 +22,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // Default settings
       setSettings({
         id: 1,
+      }
+      )
+    }
     // Load settings from backend
     const loadSettings = async () => {
       try {
