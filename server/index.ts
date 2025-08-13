@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import http from "http";
 
 const app = express();
 app.use(express.json());
@@ -47,8 +48,8 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // Create HTTP server instance
-  const server = require('http').createServer(app);
+  // Create HTTP server instance  
+  const server = http.createServer(app);
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
