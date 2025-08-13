@@ -63,6 +63,17 @@ export default function Settings() {
       return;
     }
 
+    // Validate URL format before testing
+    if (!formData.googleScriptUrl.includes('script.google.com') || 
+        !formData.googleScriptUrl.endsWith('/exec')) {
+      toast({
+        title: "Invalid URL Format",
+        description: "Google Apps Script URL should be from script.google.com and end with '/exec'",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setConnectionStatus("testing");
     setTestResult("");
 

@@ -46,8 +46,19 @@ export async function registerRoutes(app: Express) {
         });
       }
 
+      // Validate the script URL format
+      if (!googleSheetsClient.constructor.isValidScriptUrl || 
+          !(googleSheetsClient.constructor as any).isValidScriptUrl(settings.googleScriptUrl)) {
+        return res.status(400).json({
+          success: false,
+          error: `Invalid Google Apps Script URL format. URL should end with '/exec' and be from script.google.com`
+        });
+      }
+
       // Set the script URL in the client
       googleSheetsClient.setScriptUrl(settings.googleScriptUrl);
+
+      log(`Making Google Sheets API request - Action: ${action}, SheetId: ${sheetId || settings.googleSheetId}`);
 
       // Forward the request to Google Apps Script
       const result = await googleSheetsClient.makeRequest(action, data, sheetId || settings.googleSheetId);

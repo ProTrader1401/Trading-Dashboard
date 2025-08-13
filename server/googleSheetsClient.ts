@@ -185,8 +185,13 @@ export class GoogleSheetsClient {
       throw new Error('Script URL not configured');
     }
 
+    // Validate the script URL format
+    if (!GoogleSheetsClient.isValidScriptUrl(this.scriptUrl)) {
+      throw new Error(`Invalid Google Apps Script URL format: ${this.scriptUrl}`);
+    }
+
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // Ultra-fast 5 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // Increased timeout
 
     try {
       const requestBody = {
@@ -194,6 +199,9 @@ export class GoogleSheetsClient {
         data: { ...data, sheetId: sheetId || data?.sheetId },
         sheetId: sheetId || data?.sheetId,
       };
+
+      console.log(`Making request to Google Apps Script: ${this.scriptUrl}`);
+      console.log(`Request body:`, JSON.stringify(requestBody, null, 2));
 
       const response = await fetch(this.scriptUrl, {
         method: 'POST',
@@ -208,10 +216,12 @@ export class GoogleSheetsClient {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error(`HTTP ${response.status} error from Google Apps Script:`, errorText);
         throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
       }
 
       const result = await response.json();
+      console.log(`Response from Google Apps Script:`, result);
       return result;
     } catch (error) {
       clearTimeout(timeoutId);
@@ -220,6 +230,11 @@ export class GoogleSheetsClient {
         throw new Error('Request timeout - Google Sheets took too long to respond');
       }
       
+      if (error instanceof Error && error.message.includes('fetch failed')) {
+        throw new Error(`Network error connecting to Google Apps Script. Please verify the URL is correct and the script is deployed: ${error.message}`);
+      }
+      
+      console.error('Google Sheets API request failed:', error);
       throw error;
     }
   }
